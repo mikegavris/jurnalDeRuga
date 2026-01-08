@@ -24,7 +24,7 @@ function FloatingVerse() {
   const [visible, setVisible] = useState(true)
 
   useEffect(() => {
-    const showDuration = 30000
+    const showDuration = 15000
     const fadeDuration = 1000
 
     const interval = setInterval(() => {
