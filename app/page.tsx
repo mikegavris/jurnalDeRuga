@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
+import { BookOpen, HandHeart, AlarmClock } from "lucide-react"
 
 /* ======================
    Versete biblice
@@ -23,7 +24,7 @@ function FloatingVerse() {
   const [visible, setVisible] = useState(true)
 
   useEffect(() => {
-    const showDuration = 30000 // 30 sec
+    const showDuration = 30000
     const fadeDuration = 1000
 
     const interval = setInterval(() => {
@@ -51,6 +52,51 @@ function FloatingVerse() {
 }
 
 /* ======================
+   Card Feature
+====================== */
+function FeatureCard({
+  icon,
+  title,
+  text,
+  color,
+}: {
+  icon: React.ReactNode
+  title: string
+  text: string
+  color: "blue" | "amber" | "rose"
+}) {
+  const colors = {
+    blue: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
+    amber: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+    rose: "bg-rose-500/10 text-rose-600 dark:text-rose-400",
+  }
+
+  return (
+    <div
+      className="
+        group rounded-2xl border border-border/60 bg-background/60 backdrop-blur
+        p-6 text-center transition-all duration-300
+        hover:-translate-y-2 hover:shadow-xl
+      "
+    >
+      <div
+        className={`
+          mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl
+          transition-all duration-300
+          ${colors[color]}
+          group-hover:scale-110 group-hover:shadow-md
+        `}
+      >
+        {icon}
+      </div>
+
+      <h3 className="font-semibold text-lg mb-1">{title}</h3>
+      <p className="text-sm opacity-80">{text}</p>
+    </div>
+  )
+}
+
+/* ======================
    Pagina principală
 ====================== */
 export default function Page() {
@@ -59,25 +105,24 @@ export default function Page() {
   return (
     <div className={dark ? "dark" : ""}>
       <div
-        className={`min-h-screen transition-colors duration-500
+        className={`relative min-h-screen transition-colors duration-500
         ${dark
           ? "bg-gradient-to-b from-neutral-950 to-neutral-900 text-neutral-100"
           : "bg-gradient-to-b from-background to-secondary/20 text-foreground"}
-        flex flex-col items-center justify-center p-6`}
+        flex flex-col items-center justify-center px-6 py-10`}
       >
-        {/* Switch Dark / Light */}
-        <div className="w-full flex justify-center sm:justify-end mb-6 sm:mb-0 sm:absolute sm:top-6 sm:right-6">
-  <button
-    onClick={() => setDark(!dark)}
-    className="flex items-center gap-2 rounded-full border px-4 py-2 text-sm
-      hover:bg-muted transition"
-  >
-    {dark ? "🌙 Dark" : "☀️ Light"}
-  </button>
-</div>
+        {/* Switch Dark / Light – FIXAT SUS */}
+        <div className="absolute top-4 right-4 z-20">
+          <button
+            onClick={() => setDark(!dark)}
+            className="flex items-center gap-2 rounded-full border px-4 py-2 text-sm
+              bg-background/80 backdrop-blur hover:bg-muted transition"
+          >
+            {dark ? "🌙 Dark" : "☀️ Light"}
+          </button>
+        </div>
 
-
-        <div className="mx-auto max-w-2xl text-center space-y-8">
+        <div className="mx-auto max-w-3xl text-center space-y-8">
           {/* Verset */}
           <FloatingVerse />
 
@@ -88,50 +133,43 @@ export default function Page() {
             </h1>
 
             <p className="text-pretty text-xl md:text-2xl leading-relaxed opacity-80">
-              Înregistrează-ți experiențele cu Dumnezeu, adaugă cereri de rugăciune și primește versete biblice zilnice
+              Înregistrează-ți experiențele cu Dumnezeu, adaugă cereri de rugăciune
+              și primește versete biblice zilnice
             </p>
           </div>
 
           {/* Butoane */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <Button asChild size="lg" className="text-lg">
+            <Button asChild size="lg" className="text-lg px-8">
               <Link href="/auth/sign-up">Creează cont</Link>
             </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="text-lg bg-transparent"
-            >
+            <Button asChild size="lg" variant="outline" className="text-lg px-8 bg-transparent">
               <Link href="/auth/login">Autentificare</Link>
             </Button>
           </div>
 
           {/* Features */}
-          <div className="pt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-            <div className="space-y-2">
-              <div className="text-4xl">📖</div>
-              <h3 className="font-semibold text-lg">Jurnal zilnic</h3>
-              <p className="text-sm opacity-80">
-                Documentează experiențele tale spirituale zilnice cu text și fotografii
-              </p>
-            </div>
+          <div className="pt-14 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <FeatureCard
+              color="blue"
+              icon={<BookOpen className="h-7 w-7" />}
+              title="Jurnal zilnic"
+              text="Notează-ți gândurile, trăirile și întâlnirile tale zilnice cu Dumnezeu, însoțite de text și imagini."
+            />
 
-            <div className="space-y-2">
-              <div className="text-4xl">🙏</div>
-              <h3 className="font-semibold text-lg">Cereri de rugăciune</h3>
-              <p className="text-sm opacity-80">
-                Ține evidența rugăciunilor tale și marchează-le ca răspunse
-              </p>
-            </div>
+            <FeatureCard
+              color="amber"
+              icon={<HandHeart className="h-7 w-7" />}
+              title="Cereri de rugăciune"
+              text="Păstrează o evidență a rugăciunilor tale și urmărește modul în care Dumnezeu răspunde."
+            />
 
-            <div className="space-y-2">
-              <div className="text-4xl">⏰</div>
-              <h3 className="font-semibold text-lg">Memento rugăciune</h3>
-              <p className="text-sm opacity-80">
-                Primește amintiri pentru momentele tale de rugăciune
-              </p>
-            </div>
+            <FeatureCard
+              color="rose"
+              icon={<AlarmClock className="h-7 w-7" />}
+              title="Memento rugăciune"
+              text="Primește notificări blânde care te ajută să-ți faci timp zilnic pentru rugăciune."
+            />
           </div>
         </div>
       </div>
