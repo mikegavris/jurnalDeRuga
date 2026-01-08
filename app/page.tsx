@@ -3,17 +3,17 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
-import { BookOpen, HandHeart, AlarmClock, Sun, Moon } from "lucide-react"
+import { BookOpen, HandHeart, AlarmClock } from "lucide-react"
 
 /* ======================
    Versete biblice
 ====================== */
 const verses = [
   "„Rugați-vă neîncetat.” – 1 Tesaloniceni 5:17",
-  "„Strigă către Mine și-ți voi răspunde.” – Ieremia 33:3",
-  "„Domnul este aproape de toți cei ce-L cheamă.” – Psalmul 145:18",
   "„Apropiați-vă de Dumnezeu și El Se va apropia de voi.” – Iacov 4:8",
   "„Orice veți cere în rugăciune, cu credință, veți primi.” – Matei 21:22",
+  "„Domnul este aproape de toți cei ce-L cheamă.” – Psalmul 145:18",
+  "„Strigă către Mine și-ți voi răspunde.” – Ieremia 33:3",
 ]
 
 /* ======================
@@ -36,9 +36,9 @@ function FloatingVerse() {
   }, [])
 
   return (
-    <div className="h-10 flex items-center justify-center">
+    <div className="min-h-[2.5rem] flex items-center justify-center">
       <p
-        className={`text-sm md:text-base italic transition-all duration-700 text-center
+        className={`text-sm md:text-base italic transition-all duration-700
         ${visible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-1"}`}
       >
         {verses[index]}
@@ -60,106 +60,103 @@ export default function Page() {
         ${dark
           ? "bg-gradient-to-b from-neutral-950 to-neutral-900 text-neutral-100"
           : "bg-gradient-to-b from-background to-secondary/20 text-foreground"}
-        flex flex-col`}
+        flex flex-col items-center justify-center p-6`}
       >
-        {/* HEADER – switch (SAFE pe mobile) */}
-        <header className="w-full flex justify-center sm:justify-end p-4 sm:p-6">
+        {/* Switch Dark / Light */}
+        <div className="w-full flex justify-center sm:justify-end mb-6 sm:absolute sm:top-6 sm:right-6">
           <button
             onClick={() => setDark(!dark)}
             className="flex items-center gap-2 rounded-full border px-4 py-2 text-sm
-              hover:bg-muted transition"
+            backdrop-blur hover:bg-muted transition"
           >
-            {dark ? <Moon size={16} /> : <Sun size={16} />}
-            {dark ? "Dark" : "Light"}
+            {dark ? "🌙 Dark" : "☀️ Light"}
           </button>
-        </header>
+        </div>
 
-        {/* CONTINUT */}
-        <main className="flex-1 flex items-center justify-center px-6">
-          <div className="mx-auto max-w-2xl text-center space-y-8">
-            <FloatingVerse />
+        <div className="mx-auto max-w-3xl text-center space-y-8">
+          {/* Verset */}
+          <FloatingVerse />
 
-            <div className="space-y-4">
-              <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
-                Jurnal de Rugăciune
-              </h1>
+          {/* Titlu */}
+          <div className="space-y-4">
+            <h1 className="text-balance text-5xl font-bold tracking-tight md:text-6xl">
+              Jurnal de Rugăciune
+            </h1>
 
-              <p className="text-xl md:text-2xl leading-relaxed opacity-80">
-                Înregistrează-ți experiențele cu Dumnezeu, adaugă cereri de
-                rugăciune și primește versete biblice zilnice
-              </p>
-            </div>
-
-            {/* BUTOANE */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-              <Button asChild size="lg" className="text-lg">
-                <Link href="/auth/sign-up">Creează cont</Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="text-lg bg-transparent"
-              >
-                <Link href="/auth/login">Autentificare</Link>
-              </Button>
-            </div>
-
-            {/* FEATURES */}
-            <div className="pt-14 grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Card */}
-              <Feature
-                icon={BookOpen}
-                color="text-blue-500"
-                title="Jurnal zilnic"
-                text="Notează-ți gândurile, trăirile și întâlnirile tale zilnice cu Dumnezeu."
-              />
-
-              <Feature
-                icon={HandHeart}
-                color="text-emerald-500"
-                title="Cereri de rugăciune"
-                text="Păstrează o evidență a rugăciunilor tale și urmărește răspunsurile primite."
-              />
-
-              <Feature
-                icon={AlarmClock}
-                color="text-amber-500"
-                title="Memento rugăciune"
-                text="Primește amintiri blânde care te ajută să-ți faci timp zilnic pentru rugăciune."
-              />
-            </div>
+            <p className="text-pretty text-xl md:text-2xl leading-relaxed opacity-80">
+              Înregistrează-ți experiențele cu Dumnezeu, adaugă cereri de rugăciune
+              și primește versete biblice zilnice
+            </p>
           </div>
-        </main>
-      </div>
-    </div>
-  )
-}
 
-/* ======================
-   Componentă Feature
-====================== */
-function Feature({
-  icon: Icon,
-  title,
-  text,
-  color,
-}: {
-  icon: any
-  title: string
-  text: string
-  color: string
-}) {
-  return (
-    <div className="group text-center space-y-3 transition-transform duration-300 hover:-translate-y-1">
-      <div
-        className={`mx-auto w-14 h-14 rounded-2xl flex items-center justify-center
-        bg-muted ${color} group-hover:scale-110 transition`}
-      >
-        <Icon size={28} />
+          {/* Butoane */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+            <Button asChild size="lg" className="text-lg">
+              <Link href="/auth/sign-up">Creează cont</Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="text-lg bg-transparent">
+              <Link href="/auth/login">Autentificare</Link>
+            </Button>
+          </div>
+
+          {/* FEATURES CLICKABILE */}
+          <div className="pt-14 grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Jurnal */}
+            <Link
+              href="/journal"
+              className="group rounded-2xl border p-6 transition
+              hover:-translate-y-1 hover:shadow-xl
+              hover:bg-secondary/20 dark:hover:bg-white/5"
+            >
+              <div className="mx-auto mb-4 w-14 h-14 rounded-full flex items-center justify-center
+              bg-blue-500/10 text-blue-600 dark:text-blue-400
+              group-hover:scale-110 transition">
+                <BookOpen size={28} />
+              </div>
+              <h3 className="font-semibold text-lg mb-2">Jurnal zilnic</h3>
+              <p className="text-sm opacity-80">
+                Notează-ți gândurile, trăirile și întâlnirile tale zilnice cu Dumnezeu, însoțite de texte și imagini.
+              </p>
+            </Link>
+
+            {/* Cereri */}
+            <Link
+              href="/prayers"
+              className="group rounded-2xl border p-6 transition
+              hover:-translate-y-1 hover:shadow-xl
+              hover:bg-secondary/20 dark:hover:bg-white/5"
+            >
+              <div className="mx-auto mb-4 w-14 h-14 rounded-full flex items-center justify-center
+              bg-emerald-500/10 text-emerald-600 dark:text-emerald-400
+              group-hover:scale-110 transition">
+                <HandHeart size={28} />
+              </div>
+              <h3 className="font-semibold text-lg mb-2">Cereri de rugăciune</h3>
+              <p className="text-sm opacity-80">
+                Păstrează cererile tale și urmărește cum Dumnezeu lucrează în timp.
+              </p>
+            </Link>
+
+            {/* Memento */}
+            <Link
+              href="/reminders"
+              className="group rounded-2xl border p-6 transition
+              hover:-translate-y-1 hover:shadow-xl
+              hover:bg-secondary/20 dark:hover:bg-white/5"
+            >
+              <div className="mx-auto mb-4 w-14 h-14 rounded-full flex items-center justify-center
+              bg-amber-500/10 text-amber-600 dark:text-amber-400
+              group-hover:scale-110 transition">
+                <AlarmClock size={28} />
+              </div>
+              <h3 className="font-semibold text-lg mb-2">Memento rugăciune</h3>
+              <p className="text-sm opacity-80">
+                Primește reamintiri blânde pentru momentele tale zilnice de rugăciune.
+              </p>
+            </Link>
+          </div>
+        </div>
       </div>
-      <h3 className="font-semibold text-lg">{title}</h3>
-      <p className="text-sm opacity-80">{text}</p>
     </div>
   )
 }
