@@ -66,15 +66,16 @@ export default function Page() {
         flex flex-col items-center justify-center p-6`}
       >
         {/* Switch Dark / Light */}
-        <div className="absolute top-6 right-6">
-          <button
-            onClick={() => setDark(!dark)}
-            className="flex items-center gap-2 rounded-full border px-4 py-2 text-sm
-              hover:bg-muted transition"
-          >
-            {dark ? "🌙 Dark" : "☀️ Light"}
-          </button>
-        </div>
+        <div className="w-full flex justify-center sm:justify-end mb-6 sm:mb-0 sm:absolute sm:top-6 sm:right-6">
+  <button
+    onClick={() => setDark(!dark)}
+    className="flex items-center gap-2 rounded-full border px-4 py-2 text-sm
+      hover:bg-muted transition"
+  >
+    {dark ? "🌙 Dark" : "☀️ Light"}
+  </button>
+</div>
+
 
         <div className="mx-auto max-w-2xl text-center space-y-8">
           {/* Verset */}
