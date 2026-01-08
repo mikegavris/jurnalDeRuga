@@ -103,7 +103,7 @@ export default function Page() {
           <div className="pt-14 grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Jurnal */}
             <Link
-              href="/journal"
+              href="/jurnal"
               className="group rounded-2xl border p-6 transition
               hover:-translate-y-1 hover:shadow-xl
               hover:bg-secondary/20 dark:hover:bg-white/5"
@@ -121,7 +121,7 @@ export default function Page() {
 
             {/* Cereri */}
             <Link
-              href="/prayers"
+              href="/rugaciuni"
               className="group rounded-2xl border p-6 transition
               hover:-translate-y-1 hover:shadow-xl
               hover:bg-secondary/20 dark:hover:bg-white/5"
@@ -139,7 +139,7 @@ export default function Page() {
 
             {/* Memento */}
             <Link
-              href="/reminders"
+              href="/remindere"
               className="group rounded-2xl border p-6 transition
               hover:-translate-y-1 hover:shadow-xl
               hover:bg-secondary/20 dark:hover:bg-white/5"
