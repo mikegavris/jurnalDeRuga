@@ -22,27 +22,32 @@ export default function Page() {
             <Link href="/auth/login">Autentificare</Link>
           </Button>
         </div>
+<div className="pt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+  <div className="space-y-3 flex flex-col items-center">
+    <div className="text-4xl">📖</div>
+    <h3 className="font-semibold text-lg">Jurnal zilnic</h3>
+    <p className="text-sm text-muted-foreground max-w-xs">
+      Documentează experiențele tale spirituale zilnice cu text și fotografii
+    </p>
+  </div>
 
-        <div className="pt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-          <div className="space-y-2">
-            <div className="text-4xl">📖</div>
-            <h3 className="font-semibold text-lg">Jurnal zilnic</h3>
-            <p className="text-sm text-muted-foreground">
-              Documentează experiențele tale spirituale zilnice cu text și fotografii
-            </p>
-          </div>
-          <div className="space-y-2">
-            <div className="text-4xl">🙏</div>
-            <h3 className="font-semibold text-lg">Cereri de rugăciune</h3>
-            <p className="text-sm text-muted-foreground">Ține evidența rugăciunilor tale și marchează-le ca răspunse</p>
-          </div>
-          <div className="space-y-2">
-            <div className="text-4xl">⏰</div>
-            <h3 className="font-semibold text-lg">Memento rugăciune</h3>
-            <p className="text-sm text-muted-foreground">Primește amintiri pentru momentele tale de rugăciune</p>
-          </div>
-        </div>
-      </div>
+  <div className="space-y-3 flex flex-col items-center">
+    <div className="text-4xl">🙏</div>
+    <h3 className="font-semibold text-lg">Cereri de rugăciune</h3>
+    <p className="text-sm text-muted-foreground max-w-xs">
+      Ține evidența rugăciunilor tale și marchează-le ca răspunse
+    </p>
+  </div>
+
+  <div className="space-y-3 flex flex-col items-center">
+    <div className="text-4xl">⏰</div>
+    <h3 className="font-semibold text-lg">Memento rugăciune</h3>
+    <p className="text-sm text-muted-foreground max-w-xs">
+      Primește amintiri pentru momentele tale de rugăciune
+    </p>
+  </div>
+</div>
+</div>
     </div>
   )
 }
