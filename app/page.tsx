@@ -8,13 +8,30 @@ import { BookOpen, HandHeart, AlarmClock } from "lucide-react"
 /* ======================
    Versete biblice
 ====================== */
-const verses = [
-  "„Rugați-vă neîncetat.” – 1 Tesaloniceni 5:17",
-  "„Apropiați-vă de Dumnezeu și El Se va apropia de voi.” – Iacov 4:8",
-  "„Orice veți cere în rugăciune, cu credință, veți primi.” – Matei 21:22",
-  "„Domnul este aproape de toți cei ce-L cheamă.” – Psalmul 145:18",
-  "„Strigă către Mine și-ți voi răspunde.” – Ieremia 33:3",
+type Verse = {
+  text: string
+  ref: string
+}
+
+const verses: Verse[] = [
+  {
+    text: "Rugați-vă neîncetat.",
+    ref: "1 Tesaloniceni 5:17",
+  },
+  {
+    text: "Apropiați-vă de Dumnezeu și El Se va apropia de voi.",
+    ref: "Iacov 4:8",
+  },
+  {
+    text: "Orice veți cere în rugăciune, cu credință, veți primi.",
+    ref: "Matei 21:22",
+  },
+  {
+    text: "Domnul este aproape de toți cei ce-L cheamă.",
+    ref: "Psalmul 145:18",
+  },
 ]
+
 
 /* ======================
    Verset animat
@@ -24,28 +41,42 @@ function FloatingVerse() {
   const [visible, setVisible] = useState(true)
 
   useEffect(() => {
+    const showDuration = 10000 // 30 sec
+    const fadeDuration = 1000
+
     const interval = setInterval(() => {
       setVisible(false)
+
       setTimeout(() => {
-        setIndex((i) => (i + 1) % verses.length)
+        setIndex((prev) => (prev + 1) % verses.length)
         setVisible(true)
-      }, 800)
-    }, 30000)
+      }, fadeDuration)
+    }, showDuration)
+const verse = verses[index]
 
     return () => clearInterval(interval)
   }, [])
 
   return (
-    <div className="min-h-[2.5rem] flex items-center justify-center">
-      <p
-        className={`text-sm md:text-base italic transition-all duration-700
-        ${visible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-1"}`}
+    <div className="flex justify-center px-4">
+      <div
+        className={`max-w-xs sm:max-w-none text-center transition-all duration-1000
+        ${visible ? "opacity-100 blur-0 translate-y-0" : "opacity-0 blur-sm -translate-y-1"}`}
       >
-        {verses[index]}
-      </p>
+        {/* Text verset */}
+        <p className="italic text-sm leading-relaxed md:text-base">
+          „{verses[index].text}”
+        </p>
+
+        {/* Referință – mereu pe rând separat, BOLD */}
+        <p className="mt-1 text-sm italic font-semibold opacity-90">
+          – {verses[index].ref}
+        </p>
+      </div>
     </div>
   )
 }
+
 
 /* ======================
    Pagina principală
@@ -85,7 +116,7 @@ export default function Page() {
 
             <p className="text-pretty text-xl md:text-2xl leading-relaxed opacity-80">
               Înregistrează-ți experiențele cu Dumnezeu, adaugă cereri de rugăciune
-              și primește versete biblice zilnice
+              și primește zilnic versete biblice pentru a-ți întări credința.
             </p>
           </div>
 
@@ -133,7 +164,7 @@ export default function Page() {
               </div>
               <h3 className="font-semibold text-lg mb-2">Cereri de rugăciune</h3>
               <p className="text-sm opacity-80">
-                Păstrează cererile tale și urmărește cum Dumnezeu lucrează în timp.
+                Păstrează o evidență a rugăciunilor tale și urmărește modul în care Dumnezeu răspunde.
               </p>
             </Link>
 
@@ -151,7 +182,7 @@ export default function Page() {
               </div>
               <h3 className="font-semibold text-lg mb-2">Memento rugăciune</h3>
               <p className="text-sm opacity-80">
-                Primește reamintiri blânde pentru momentele tale zilnice de rugăciune.
+                Primește notificări blânde care te ajută să-ți faci timp zilnic pentru rugăciune.
               </p>
             </Link>
           </div>
