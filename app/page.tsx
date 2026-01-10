@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import { BookOpen, HandHeart, AlarmClock } from "lucide-react"
@@ -110,7 +111,14 @@ export default function Page() {
         <div className="mx-auto max-w-3xl text-center space-y-8">
           {/* Verset */}
           <FloatingVerse />
-
+<div className="space-y-4">
+  <Image
+    src="/logo.png"
+    alt="Voia Ta"
+    width={240}
+    height={240}
+    className="mx-auto"
+  />
           {/* Titlu */}
           <div className="space-y-4">
             <h1 className="text-balance text-5xl font-bold tracking-tight md:text-6xl">
@@ -122,6 +130,7 @@ export default function Page() {
               și primește zilnic versete biblice pentru a-ți întări credința.
             </p>
           </div>
+           </div>
 
           {/* Butoane */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
