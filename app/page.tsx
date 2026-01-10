@@ -64,9 +64,12 @@ const verse = verses[index]
         ${visible ? "opacity-100 blur-0 translate-y-0" : "opacity-0 blur-sm -translate-y-1"}`}
       >
         {/* Text verset */}
-        <p className="italic text-sm leading-relaxed md:text-base">
-          „{verses[index].text}”
-        </p>
+        <p className="italic text-base leading-relaxed sm:text-lg md:text-xl">
+  „{verses[index].text}”
+</p>
+
+
+
 
         {/* Referință – mereu pe rând separat, BOLD */}
         <p className="mt-1 text-sm italic font-semibold opacity-90">

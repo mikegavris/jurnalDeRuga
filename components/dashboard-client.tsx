@@ -77,22 +77,7 @@ export function DashboardClient() {
             <BookOpen className="h-4 w-4 mr-2" />
             Jurnal
           </Button>
-          <Button
-            variant={activeTab === "prayers" ? "default" : "ghost"}
-            className="rounded-b-none"
-            onClick={() => setActiveTab("prayers")}
-          >
-            <Church className="h-4 w-4 mr-2" />
-            Rugăciuni
-          </Button>
-          <Button
-            variant={activeTab === "reminders" ? "default" : "ghost"}
-            className="rounded-b-none"
-            onClick={() => setActiveTab("reminders")}
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Mementouri
-          </Button>
+          
         </div>
 
         {/* Tab Content */}
