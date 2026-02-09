@@ -1,61 +1,79 @@
 "use client"
 
 import type React from "react"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
 
 export default function SignUpPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [fullName, setFullName] = useState("")
-  const [repeatPassword, setRepeatPassword] = useState("")
-  const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const supabase = createClient()
   const router = useRouter()
 
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+
+  /* =========================
+     SIGN UP EMAIL + PAROLĂ
+  ========================== */
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
-    const supabase = createClient()
-    setIsLoading(true)
     setError(null)
 
-    if (password !== repeatPassword) {
-      setError("Parolele nu se potrivesc")
-      setIsLoading(false)
+    if (password !== confirmPassword) {
+      setError("Parolele nu coincid")
       return
     }
 
-    if (password.length < 6) {
-      setError("Parola trebuie să aibă cel puțin 6 caractere")
-      setIsLoading(false)
-      return
-    }
+    setIsLoading(true)
 
     try {
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/dashboard`,
           data: {
-            full_name: fullName,
+            full_name: name,
           },
         },
       })
+
       if (error) throw error
-      router.push("/auth/verify-email")
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "A apărut o eroare")
+
+      router.push("/dashboard")
+      router.refresh()
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "A apărut o eroare")
     } finally {
       setIsLoading(false)
     }
+  }
+
+  /* =========================
+     SIGN UP CU GOOGLE
+  ========================== */
+  const signUpWithGoogle = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    })
   }
 
   return (
@@ -63,66 +81,95 @@ export default function SignUpPage() {
       <div className="w-full max-w-sm">
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl">Crează cont</CardTitle>
-            <CardDescription>Completează informațiile pentru a-ți crea un cont nou</CardDescription>
+            <CardTitle className="text-2xl">Creează cont</CardTitle>
+            <CardDescription>
+              Completează informațiile pentru a-ți crea un cont nou
+            </CardDescription>
           </CardHeader>
+
           <CardContent>
             <form onSubmit={handleSignUp}>
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="fullName">Nume complet</Label>
+                  <Label htmlFor="name">Nume complet</Label>
                   <Input
-                    id="fullName"
-                    type="text"
+                    id="name"
                     placeholder="Ion Popescu"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     required
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
                   />
                 </div>
+
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
                     type="email"
                     placeholder="exemplu@email.ro"
-                    required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    required
                   />
                 </div>
+
                 <div className="grid gap-2">
                   <Label htmlFor="password">Parolă</Label>
                   <Input
                     id="password"
                     type="password"
-                    required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="repeat-password">Confirmă parola</Label>
-                  <Input
-                    id="repeat-password"
-                    type="password"
                     required
-                    value={repeatPassword}
-                    onChange={(e) => setRepeatPassword(e.target.value)}
                   />
                 </div>
-                {error && <p className="text-sm text-destructive">{error}</p>}
+
+                <div className="grid gap-2">
+                  <Label htmlFor="confirm">Confirmă parola</Label>
+                  <Input
+                    id="confirm"
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                </div>
+
+                {error && (
+                  <p className="text-sm text-destructive">{error}</p>
+                )}
+
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Se creează contul..." : "Creează cont"}
+                  {isLoading ? "Se creează..." : "Creează cont"}
                 </Button>
               </div>
-              <div className="mt-4 text-center text-sm">
-                Ai deja cont?{" "}
-                <Link href="/auth/login" className="underline underline-offset-4 text-primary">
-                  Autentifică-te
-                </Link>
-              </div>
             </form>
+
+            {/* separator */}
+            <div className="my-4 flex items-center gap-2">
+              <div className="h-px flex-1 bg-border" />
+              <span className="text-xs text-muted-foreground">sau</span>
+              <div className="h-px flex-1 bg-border" />
+            </div>
+
+            {/* Google */}
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={signUpWithGoogle}
+            >
+              Continuă cu Google
+            </Button>
+
+            <div className="mt-4 text-center text-sm">
+              Ai deja cont?{" "}
+              <Link
+                href="/auth/login"
+                className="underline underline-offset-4 text-primary"
+              >
+                Autentifică-te
+              </Link>
+            </div>
           </CardContent>
         </Card>
       </div>

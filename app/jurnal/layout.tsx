@@ -1,3 +1,5 @@
+import Script from "next/script"
+
 export default function JournalLayout({
   children,
 }: {
@@ -5,6 +7,10 @@ export default function JournalLayout({
 }) {
   return (
     <div className="flex min-h-screen bg-background">
+      <Script
+        src="https://upload-widget.cloudinary.com/global/all.js"
+        strategy="afterInteractive"
+      />
       {children}
     </div>
   )

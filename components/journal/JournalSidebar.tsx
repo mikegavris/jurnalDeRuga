@@ -1,56 +1,93 @@
-"use client"
+type Props = {
+  searchQuery: string
+  onSearchChange: (v: string) => void
 
-import { useState } from "react"
-import { Input } from "@/components/ui/input"
+  selectedMonth: number | null
+  onMonthSelect: (m: number | null) => void
 
-const MONTHS = [
-  "Ianuarie", "Februarie", "Martie", "Aprilie",
-  "Mai", "Iunie", "Iulie", "August",
-  "Septembrie", "Octombrie", "Noiembrie", "Decembrie",
+  activeTag: string | null
+  onTagSelect: (t: string | null) => void
+
+  allTags: string[]
+  onResetFilters: () => void
+}
+
+const months = [
+  "Ianuarie","Februarie","Martie","Aprilie","Mai","Iunie",
+  "Iulie","August","Septembrie","Octombrie","Noiembrie","Decembrie"
 ]
 
-export default function JournalSidebar() {
-  const [search, setSearch] = useState("")
-
+export default function JournalSidebar({
+  searchQuery,
+  onSearchChange,
+  selectedMonth,
+  onMonthSelect,
+  activeTag,
+  onTagSelect,
+  allTags,
+  onResetFilters
+}: Props) {
   return (
-    <aside className="w-64 border-r bg-muted/30 p-4 space-y-6">
+    <aside className="w-64 h-full overflow-y-auto p-4 border-r bg-background space-y-6">
+
+   <a href="/" className="flex items-center gap-3 px-4 py-3">
+  <img
+    src="/logo.png"
+    alt="Voia Ta"
+    className="w-34 h-22 rounded-full"
+  />
+ 
+</a>
+
+      <input
+        value={searchQuery}
+        onChange={e => onSearchChange(e.target.value)}
+        placeholder="Caută..."
+        className="w-full border p-2 rounded text-sm bg-white"
+      />
+
       <div>
-        <h3 className="text-sm font-semibold mb-2">Caută</h3>
-        <Input
-          placeholder="Caută în jurnal..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+        <h3 className="font-semibold mb-2 text-sm">Luni</h3>
+        {months.map((m, i) => (
+          <div
+            key={m}
+            className={`cursor-pointer px-2 py-1 rounded text-sm transition-colors ${
+              selectedMonth === i
+                ? "bg-blue-500 text-white"
+                : "hover:bg-gray-200"
+            }`}
+            onClick={() => onMonthSelect(selectedMonth === i ? null : i)}
+          >
+            {m}
+          </div>
+        ))}
       </div>
 
       <div>
-        <h3 className="text-sm font-semibold mb-2">Luni</h3>
-        <ul className="space-y-1 text-sm">
-          {MONTHS.map((m) => (
-            <li
-              key={m}
-              className="cursor-pointer rounded px-2 py-1 hover:bg-accent"
+        <h3 className="font-semibold mb-2 text-sm">Etichete</h3>
+        <div className="flex gap-1.5 flex-wrap">
+          {allTags.map(tag => (
+            <span
+              key={tag}
+              onClick={() => onTagSelect(activeTag === tag ? null : tag)}
+              className={`px-2 py-0.5 rounded cursor-pointer text-xs transition-colors ${
+                activeTag === tag
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 hover:bg-gray-300"
+              }`}
             >
-              {m}
-            </li>
+              {tag}
+            </span>
           ))}
-        </ul>
-      </div>
-
-      <div>
-        <h3 className="text-sm font-semibold mb-2">Etichete</h3>
-        <div className="flex flex-wrap gap-2">
-          <span className="text-xs px-2 py-1 rounded bg-accent">
-            Credință
-          </span>
-          <span className="text-xs px-2 py-1 rounded bg-accent">
-            Mulțumire
-          </span>
-          <span className="text-xs px-2 py-1 rounded bg-accent">
-            Luptă
-          </span>
         </div>
       </div>
+
+      <button
+        onClick={onResetFilters}
+        className="text-xs text-blue-600 underline"
+      >
+        Resetează filtrele
+      </button>
     </aside>
   )
 }
