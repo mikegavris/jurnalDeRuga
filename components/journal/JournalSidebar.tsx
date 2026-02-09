@@ -28,13 +28,15 @@ export default function JournalSidebar({
   onResetFilters
 }: Props) {
   return (
-    <aside className="w-64 h-full overflow-y-auto p-4 border-r bg-background space-y-6">
+    <aside className="w-64 h-full overflow-y-auto px-4 pt-20 pb-4 border-r bg-background space-y-6">
+
 
    <a href="/" className="flex items-center gap-3 px-4 py-3">
   <img
     src="/logo.png"
     alt="Voia Ta"
-    className="w-34 h-22 rounded-full"
+    className="w-16 h-16 md:w-24 md:h-24 rounded-full object-contain"
+
   />
  
 </a>
