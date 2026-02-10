@@ -25,6 +25,7 @@ export default function JournalPage() {
   const [filteredEntries, setFilteredEntries] = useState<Entry[]>([])
 
   const [userId, setUserId] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
 
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
@@ -56,6 +57,9 @@ export default function JournalPage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
         setUserId(user.id)
+        setLoading(false)
+      } else {
+        window.location.href = "/auth/login"
       }
     }
     init()
@@ -176,6 +180,11 @@ export default function JournalPage() {
     () => [...new Set(entries.flatMap(e => e.tags || []))],
     [entries]
   )
+
+  /* =========================
+     GUARD
+  ========================= */
+  if (loading) return null
 
   return (
     <div className="flex min-h-screen relative">
