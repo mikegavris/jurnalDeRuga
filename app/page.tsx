@@ -5,6 +5,9 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import { BookOpen, HandHeart, AlarmClock } from "lucide-react"
+import { createClient } from "@/lib/supabase/client"
+
+const supabase = createClient()
 
 /* ======================
    Versete biblice
@@ -33,7 +36,6 @@ const verses: Verse[] = [
   },
 ]
 
-
 /* ======================
    Verset animat
 ====================== */
@@ -42,7 +44,7 @@ function FloatingVerse() {
   const [visible, setVisible] = useState(true)
 
   useEffect(() => {
-    const showDuration = 10000 // 30 sec
+    const showDuration = 10000
     const fadeDuration = 1000
 
     const interval = setInterval(() => {
@@ -53,7 +55,6 @@ function FloatingVerse() {
         setVisible(true)
       }, fadeDuration)
     }, showDuration)
-const verse = verses[index]
 
     return () => clearInterval(interval)
   }, [])
@@ -64,15 +65,9 @@ const verse = verses[index]
         className={`max-w-xs sm:max-w-none text-center transition-all duration-1000
         ${visible ? "opacity-100 blur-0 translate-y-0" : "opacity-0 blur-sm -translate-y-1"}`}
       >
-        {/* Text verset */}
         <p className="italic text-base leading-relaxed sm:text-lg md:text-xl">
-  „{verses[index].text}”
-</p>
-
-
-
-
-        {/* Referință – mereu pe rând separat, BOLD */}
+          „{verses[index].text}"
+        </p>
         <p className="mt-1 text-sm italic font-semibold opacity-90">
           – {verses[index].ref}
         </p>
@@ -81,12 +76,35 @@ const verse = verses[index]
   )
 }
 
-
 /* ======================
    Pagina principală
 ====================== */
 export default function Page() {
   const [dark, setDark] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function checkUser() {
+      const { data: { user } } = await supabase.auth.getUser()
+      setIsLoggedIn(!!user)
+      setUserEmail(user?.email ?? null)
+    }
+    checkUser()
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(!!session?.user)
+      setUserEmail(session?.user?.email ?? null)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  async function handleLogout() {
+    await supabase.auth.signOut()
+    setIsLoggedIn(false)
+    setUserEmail(null)
+  }
 
   return (
     <div className={dark ? "dark" : ""}>
@@ -97,54 +115,84 @@ export default function Page() {
           : "bg-gradient-to-b from-background to-secondary/20 text-foreground"}
         flex flex-col items-center justify-center p-6`}
       >
-        {/* Switch Dark / Light */}
-        <div className="w-full flex justify-center sm:justify-end mb-6 sm:absolute sm:top-6 sm:right-6">
-          <button
-            onClick={() => setDark(!dark)}
-            className="flex items-center gap-2 rounded-full border px-4 py-2 text-sm
-            backdrop-blur hover:bg-muted transition"
-          >
-            {dark ? "🌙 Dark" : "☀️ Light"}
-          </button>
+        {/* BARA DE SUS */}
+        <div className="w-full flex items-center justify-between mb-6 sm:absolute sm:top-6 sm:left-6 sm:right-6 sm:px-6">
+          
+          {/* Stânga — email user (doar dacă e logat) */}
+          <div className="text-sm opacity-60">
+            {isLoggedIn && userEmail && (
+              <span>👤 {userEmail}</span>
+            )}
+          </div>
+
+          {/* Dreapta — Dark/Light + Delogare */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setDark(!dark)}
+              className="flex items-center gap-2 rounded-full border px-4 py-2 text-sm
+              backdrop-blur hover:bg-muted transition"
+            >
+              {dark ? "🌙 Dark" : "☀️ Light"}
+            </button>
+
+            {isLoggedIn && (
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 rounded-full border border-red-300 px-4 py-2 text-sm
+                text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition"
+              >
+                Delogare
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="mx-auto max-w-3xl text-center space-y-8">
           {/* Verset */}
           <FloatingVerse />
-<div className="space-y-4">
-  <Image
-    src="/logo.png"
-    alt="Voia Ta"
-    width={240}
-    height={240}
-    className="mx-auto"
-  />
-          {/* Titlu */}
+
           <div className="space-y-4">
-            <h1 className="text-balance text-5xl font-bold tracking-tight md:text-6xl">
-              Jurnal de Rugăciune
-            </h1>
+            <Image
+              src="/logo.png"
+              alt="Voia Ta"
+              width={240}
+              height={240}
+              className="mx-auto"
+            />
 
-            <p className="text-pretty text-xl md:text-2xl leading-relaxed opacity-80">
-              Înregistrează-ți experiențele cu Dumnezeu, adaugă cereri de rugăciune
-              și primește zilnic versete biblice pentru a-ți întări credința.
-            </p>
+            {/* Titlu */}
+            <div className="space-y-4">
+              <h1 className="text-balance text-5xl font-bold tracking-tight md:text-6xl">
+                Jurnal de Rugăciune
+              </h1>
+
+              <p className="text-pretty text-xl md:text-2xl leading-relaxed opacity-80">
+                Înregistrează-ți experiențele cu Dumnezeu, adaugă cereri de rugăciune
+                și primește zilnic versete biblice pentru a-ți întări credința.
+              </p>
+            </div>
           </div>
-           </div>
 
-          {/* Butoane */}
+          {/* Butoane — condiționat */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <Button asChild size="lg" className="text-lg">
-              <Link href="/auth/sign-up">Creează cont</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="text-lg bg-transparent">
-              <Link href="/auth/login">Autentificare</Link>
-            </Button>
+            {isLoggedIn ? (
+              <Button asChild size="lg" className="text-lg">
+                <Link href="/jurnal">Mergi la jurnal</Link>
+              </Button>
+            ) : (
+              <>
+                <Button asChild size="lg" className="text-lg">
+                  <Link href="/auth/sign-up">Creează cont</Link>
+                </Button>
+                <Button asChild size="lg" variant="outline" className="text-lg bg-transparent">
+                  <Link href="/auth/login">Autentificare</Link>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* FEATURES CLICKABILE */}
           <div className="pt-14 grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Jurnal */}
             <Link
               href="/jurnal"
               className="group rounded-2xl border p-6 transition
@@ -162,7 +210,6 @@ export default function Page() {
               </p>
             </Link>
 
-            {/* Cereri */}
             <Link
               href="/rugaciuni"
               className="group rounded-2xl border p-6 transition
@@ -180,7 +227,6 @@ export default function Page() {
               </p>
             </Link>
 
-            {/* Memento */}
             <Link
               href="/remindere"
               className="group rounded-2xl border p-6 transition
