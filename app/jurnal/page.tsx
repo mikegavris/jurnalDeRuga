@@ -225,16 +225,14 @@ export default function JournalPage() {
           selectedMonth={selectedMonth}
           onMonthSelect={setSelectedMonth}
           activeTag={activeTag}
-          onTagSelect={(tag) => {
-            setActiveTag(tag)
-            setSidebarOpen(false)
-          }}
+          onTagSelect={setActiveTag}
           allTags={allTags}
           onResetFilters={() => {
             setSearchQuery("")
             setSelectedMonth(null)
             setActiveTag(null)
           }}
+          onCloseSidebar={() => setSidebarOpen(false)}
         />
       </div>
 
