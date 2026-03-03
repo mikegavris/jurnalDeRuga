@@ -11,7 +11,6 @@ type Props = {
   allTags: string[]
   onResetFilters: () => void
   
-  // Nou - pentru a închide sidebar-ul pe mobil
   onCloseSidebar?: () => void
 }
 
@@ -38,41 +37,41 @@ export default function JournalSidebar({
 
   function handleMonthSelect(month: number) {
     onMonthSelect(selectedMonth === month ? null : month)
-    onCloseSidebar?.() // Închide sidebar pe mobil
+    onCloseSidebar?.()
   }
 
   function handleTagSelect(tag: string) {
     onTagSelect(activeTag === tag ? null : tag)
-    onCloseSidebar?.() // Închide sidebar pe mobil
+    onCloseSidebar?.()
   }
 
   function handleResetFilters() {
     onResetFilters()
-    onCloseSidebar?.() // Închide sidebar pe mobil
+    onCloseSidebar?.()
   }
 
   return (
-    <aside className="w-64 h-full overflow-y-auto px-4 pt-20 pb-4 border-r bg-background space-y-6">
+<aside className="w-44 h-full overflow-y-auto px-2 pt-2 pb-4 border-r bg-background">
 
-      <a href="/" className="flex items-center gap-3 px-4 py-3">
-        <img
-          src="/logo.png"
-          alt="Voia Ta"
-          className="w-16 h-16 md:w-24 md:h-24 rounded-full object-contain"
-        />
-      </a>
+  <a href="/" className="flex items-center py-1">
+    <img
+      src="/logo.png"
+      alt="Voia Ta"
+      className="w-46 h-46 rounded-full object-contain"
+    />
+  </a>
 
-      <input
-        value={searchQuery}
-        onChange={e => handleSearchChange(e.target.value)}
-        onKeyDown={e => {
-          if (e.key === 'Enter') {
-            onCloseSidebar?.() // Închide la Enter pe mobil
-          }
-        }}
-        placeholder="Caută..."
-        className="w-full border p-2 rounded text-sm bg-white"
-      />
+  <input
+    value={searchQuery}
+    onChange={e => handleSearchChange(e.target.value)}
+    onKeyDown={e => {
+      if (e.key === 'Enter') {
+        onCloseSidebar?.()
+      }
+    }}
+    placeholder="Caută..."
+    className="w-full border p-2 rounded text-sm bg-white mb-3"
+  />
 
       <div>
         <h3 className="font-semibold mb-2 text-sm">Luni</h3>
